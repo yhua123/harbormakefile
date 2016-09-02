@@ -3,28 +3,28 @@
 # Targets:
 #
 # all, all_photon, all_ubuntu: 
-#					prepare, compile, build images and install images (default: ubuntu)
-# prepare: 			prepare env
+#			prepare, compile, build images and install images (default: ubuntu)
+# prepare: 		prepare env
 # compile_all: 		compile ui and jobservice code
 # compile_ui: 		compile ui code
-# compile_jobservice: compile jobservice code
+# compile_jobservice: 	compile jobservice code
 # build_db_ubuntu, build_log_ubuntu, build_jobservice_ubuntu, build_ui_ubuntu:
-#					build harbor ubuntu images  
+#			build harbor ubuntu images  
 # build_db_photon, build_log_photon, build_jobservice_photon, build_ui_photon:
-#					build harbor photon images
+#			build harbor photon images
 # build_db, build_log, build_jobservice, build_ui:
-#					build harbor images  (default: ubuntu)
+#			build harbor images  (default: ubuntu)
 # build_ubuntu: 	build harbor ubuntu images
 # build_photon: 	build harbor photon images
 # install, install_ubuntu, install_photon:
-# 					insatll harbor images (default: ubuntu)
+# 			insatll harbor images (default: ubuntu)
 # stop, stop_ubuntu, stop_photon: 
-# 					stop harbor images (default: ubuntu)
+# 			stop harbor images (default: ubuntu)
 # cleanbinary: 		clean ui and jobservice binary
 # cleanimage, cleanimage_ubuntu, cleanimage_photon: 
-# 					clean harbor images (default: ubuntu)
+# 			clean harbor images (default: ubuntu)
 # clean, clean_ubuntu, clean_photon:
-#					clean ui/jobservice binary and harbor images (default: ubuntu)
+#			clean ui/jobservice binary and harbor images (default: ubuntu)
 
 # common
 BUILDPATH=$(CURDIR)
