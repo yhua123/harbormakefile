@@ -68,17 +68,17 @@ DOCKERCOMPOSEFILEPATH=$(DEPLOYPATH)
 DOCKERCOMPOSEFILENAME_UBUNTU=docker-compose.yml
 DOCKERCOMPOSEFILENAME_PHOTON=docker-compose.yml.photon
 
-compare_ui:
+compile_ui:
 	@echo "start building binary for ui..."
 	$(GOBUILD) -o $(UIBINARYPATH)/$(UIBINARYNAME) $(UISOURCECODE)
 	@echo "Done."
 		
-compare_jobservice:
+compile_jobservice:
 	@echo "start building binary for jobservice..."
 	$(GOBUILD) -o $(JOBSERVICEBINARYPATH)/$(JOBSERVICEBINARYNAME) $(JOBSERVICESOURCECODE)
 	@echo "Done."
 
-compare_all: compare_ui compare_jobservice
+compile_all: compile_ui compile_jobservice
 
 prepare:
 	@echo "prepare..."
@@ -104,12 +104,12 @@ build_db_ubuntu:
 	cd $(DOCKERFILEPATH_DB_UBUNTU) && $(DOCKERCMD) build -f $(DOCKERFILENAME_DB_UBUNTU) -t $(DOCKERIMAGENAME_DB_UBUNTU) .
 	@echo "Done."
 
-build_ui_photon: compare_ui
+build_ui_photon: compile_ui
 	@echo "build ui container for photon..."
 	$(DOCKERCMD) build -f $(DOCKERFILEPATH_UI_PHOTON)/$(DOCKERFILENAME_UI_PHOTON) -t $(DOCKERIMAGENAME_UI_PHOTON) .
 	@echo "Done."
 	
-build_jobservice_photon: compare_jobservice
+build_jobservice_photon: compile_jobservice
 	@echo "build jobservice container for photon..."
 	$(DOCKERCMD) build -f $(DOCKERFILEPATH_JOBSERVICE_PHOTON)/$(DOCKERFILENAME_JOBSERVICE_PHOTON) -t $(DOCKERIMAGENAME_JOBSERVICE_PHOTON) .
 	@echo "Done."
