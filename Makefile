@@ -160,7 +160,7 @@ install_ubuntu:
 	$(DOCKERCOMPOSECMD) -f $(DOCKERCOMPOSEFILEPATH)/$(DOCKERCOMPOSEFILENAME_UBUNTU) up -d
 	@echo "Done."
 
-install_photon:
+install_photon: build_photon
 	@echo "install harbor based on photon images..."
 	$(DOCKERCOMPOSECMD) -f $(DOCKERCOMPOSEFILEPATH)/$(DOCKERCOMPOSEFILENAME_PHOTON) up -d
 	@echo "Done."
