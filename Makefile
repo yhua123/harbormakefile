@@ -8,6 +8,9 @@
 # compile_all: 		compile ui and jobservice code
 # compile_ui: 		compile ui code
 # compile_jobservice: 	compile jobservice code
+# compile_normal:	compile from local golang
+# compile_golangimage:
+#			compile from golang image
 # build_db_ubuntu, build_log_ubuntu, build_jobservice_ubuntu, build_ui_ubuntu:
 #			build harbor ubuntu images  
 # build_db_photon, build_log_photon, build_jobservice_photon, build_ui_photon:
@@ -31,6 +34,7 @@ BUILDPATH=$(CURDIR)
 DEPLOYPATH=$(BUILDPATH)/Deploy
 DOCKERCMD=$(shell which docker)
 DOCKERCOMPOSECMD=$(shell which docker-compose)
+GOBASEPATH=/go/src/github.com/vmware
 
 # go parameters
 GOCMD=$(shell which go)
@@ -40,6 +44,13 @@ GOINSTALL=$(GOCMD) install
 GOTEST=$(GOCMD) test
 GODEP=$(GOTEST) -i
 GOFMT=gofmt -w
+GOBUILDIMAGE=reg-bj.eng.vmware.com/harborrelease/harborgo:1.6.2
+GOBUILDPATH=$(GOBASEPATH)/harbor
+GOBUILDPATH_UI=$(GOBUILDPATH)/ui
+GOBUILDPATH_JOBSERVICE=$(GOBUILDPATH)/jobservice
+GOBUILDDEPLOYPATH=$(GOBUILDPATH)/Deploy
+GOBUILDDEPLOYPATH_UI=$(GOBUILDDEPLOYPATH)/ui
+GOBUILDDEPLOYPATH_JOBSERVICE=$(GOBUILDDEPLOYPATH)/jobservice
 
 # binary 
 UISOURCECODE=./ui
@@ -90,17 +101,33 @@ DOCKERCOMPOSEFILEPATH=$(DEPLOYPATH)
 DOCKERCOMPOSEFILENAME_UBUNTU=docker-compose.yml
 DOCKERCOMPOSEFILENAME_PHOTON=docker-compose.yml.photon
 
-compile_ui:
+compile_ui_normal:
 	@echo "start building binary for ui..."
 	$(GOBUILD) -o $(UIBINARYPATH)/$(UIBINARYNAME) $(UISOURCECODE)
 	@echo "Done."
 		
-compile_jobservice:
+compile_jobservice_normal:
 	@echo "start building binary for jobservice..."
 	$(GOBUILD) -o $(JOBSERVICEBINARYPATH)/$(JOBSERVICEBINARYNAME) $(JOBSERVICESOURCECODE)
 	@echo "Done."
 
-compile_all: compile_ui compile_jobservice
+compile_ui_golangimage:
+	@echo "start building binary for ui (golang image)..."
+	$(DOCKERCMD) run --rm -v $(BUILDPATH):$(GOBUILDPATH) -w $(GOBUILDPATH_UI) $(GOBUILDIMAGE) $(GOBUILD) -v -o $(GOBUILDDEPLOYPATH_UI)/$(UIBINARYNAME)
+	@echo "Done."
+	
+compile_jobservice_golangimage:
+	@echo "start building binary for jobservice (golang image)..."
+	$(DOCKERCMD) run --rm -v $(BUILDPATH):$(GOBUILDPATH) -w $(GOBUILDPATH_JOBSERVICE) $(GOBUILDIMAGE) $(GOBUILD) -v -o $(GOBUILDDEPLOYPATH_JOBSERVICE)/$(JOBSERVICEBINARYNAME)
+	@echo "Done."
+	
+
+
+compile_ui: compile_ui_normal
+compile_jobservice: compile_jobservice_normal
+compile_normal: compile_ui compile_jobservice
+compile_golangimage: compile_ui_golangimage compile_jobservice_golangimage
+compile_all: compile_normal 
 
 prepare:
 	@echo "prepare..."
